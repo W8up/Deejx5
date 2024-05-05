@@ -1,16 +1,31 @@
 #include "Keyboard.h"
 #include "HIDRemote.h"
 
-const int NUM_SLIDERS = 5;
-const int analogInputs[NUM_SLIDERS] = {A6,A7,A8,A9,A10};
+struct Buttons {
+  const int;
+  const uint16_t;
+  const int; //Media flag 1: Media key 0: Macro
+}
 
 const int NUM_BUTTONS = 5;
-const int buttonInputs[NUM_BUTTONS] = {21,19,15,14,16};
-// const char *keyBindings[NUM_BUTTONS] = {"1","2","3","4","5"};
-const uint16_t keyBindings[NUM_BUTTONS] = {HID_REMOTE_PREVIOUS, HID_REMOTE_PLAY_PAUSE, HID_REMOTE_NEXT, HID_REMOTE_MUTE, 0x185};
+
+// {Pin number, Key command, Media flag}
+const buttons[NUM_BUTTONS] = {
+  {21, HID_REMOTE_PREVIOUS, 1},
+  {19, HID_REMOTE_PLAY_PAUSE, 1},
+  {15, HID_REMOTE_NEXT, 1},
+  {14, HID_REMOTE_MUTE, 1},
+  {16, KEY_F24, 0}
+}
+
+//^^^ ONLY EDIT ^^^
+
+const int NUM_SLIDERS = 5;
+const int analogInputs[NUM_SLIDERS] = {A6,A7,A8,A9,A10};
+int analogSliderValues[NUM_SLIDERS];
+
 int previousState[NUM_BUTTONS] = {HIGH,HIGH,HIGH,HIGH,HIGH};
 
-int analogSliderValues[NUM_SLIDERS];
 
 void setup() { 
   for (int i = 0; i < NUM_SLIDERS; i++) {
@@ -68,13 +83,23 @@ void printSliderValues() {
 
 void updateButtons() {
   for (int i = 0; i < NUM_BUTTONS; i++) {
-    int buttonState = digitalRead(buttonInputs[i]);
+    int buttonState = digitalRead(buttons[i][0]);
 
     if ((buttonState != previousState[i]) && (buttonState == LOW)) {
       // Keyboard.write(keyBindings[i]);
-      HIDRemote.press(keyBindings[i]);
+      if (buttons[i][2]) {
+        HIDRemote.press(buttons[i][1]);
+      } else {
+        Keyboard.press(buttons[i][1]);
+      }
+
     } else if ((buttonState != previousState[i]) && (buttonState == HIGH)) {
-      HIDRemote.release(keyBindings[i]);
+      if (buttons[i][2]) {
+        HIDRemote.release(buttons[i][1]);
+      } else {
+        Keyboard.release(buttons[i][1]);
+      }
+
     }
     previousState[i] = buttonState;
   }
