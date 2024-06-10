@@ -11,17 +11,17 @@ const int NUM_BUTTONS = 5;
 
 // {Pin number, Key command, Media flag}
 Buttons buttons[NUM_BUTTONS] = {
-  {21, HID_REMOTE_PREVIOUS, 1},
-  {19, HID_REMOTE_PLAY_PAUSE, 1},
-  {15, HID_REMOTE_NEXT, 1},
-  {14, HID_REMOTE_MUTE, 1},
-  {16, KEY_F24, 0}
+  {1, HID_REMOTE_PREVIOUS, 1},
+  {0, HID_REMOTE_PLAY_PAUSE, 1},
+  {2, HID_REMOTE_NEXT, 1},
+  {21, HID_REMOTE_MUTE, 1},
+  {20, KEY_PRINT_SCREEN, 0}
 };
 
 //^^^ ONLY EDIT ^^^
 
 const int NUM_SLIDERS = 5;
-const int analogInputs[NUM_SLIDERS] = {A6,A7,A8,A9,A10};
+const int analogInputs[NUM_SLIDERS] = {A7,A8,A9,A10,A0};
 int analogSliderValues[NUM_SLIDERS];
 
 int previousState[NUM_BUTTONS] = {HIGH,HIGH,HIGH,HIGH,HIGH};
